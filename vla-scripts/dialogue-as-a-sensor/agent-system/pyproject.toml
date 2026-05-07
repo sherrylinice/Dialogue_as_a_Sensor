@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dialogue_sensor"
+version = "0.1.0"
+description = "Agent 2 (Visual Inquisitor / NLG) + simulated HITL user for the Dialogue-as-a-Sensor multi-agent system."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Jingming Chen" },
+    { name = "Sherry Li" },
+    { name = "Mathew Ishaq" },
+]
+dependencies = [
+    "langgraph>=0.2.50",
+    "langchain-core>=0.3.0",
+    "openai>=1.55.0",
+    "google-genai>=0.3.0",
+    "python-dotenv>=1.0.1",
+    "pillow>=10.4.0",
+    "numpy>=1.26.0",
+    "pydantic>=2.7.0",
+    "typing-extensions>=4.12.0",
+]
+
+[project.scripts]
+dialogue-sensor = "dialogue_sensor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

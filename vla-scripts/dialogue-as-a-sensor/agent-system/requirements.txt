@@ -1,0 +1,14 @@
+# Core orchestration
+langgraph>=0.2.50
+langchain-core>=0.3.0
+
+# LLM SDKs (different families per project-overview.md to avoid bias)
+openai>=1.55.0
+google-genai>=0.3.0
+
+# Utilities
+python-dotenv>=1.0.1
+pillow>=10.4.0
+numpy>=1.26.0
+pydantic>=2.7.0
+typing-extensions>=4.12.0
