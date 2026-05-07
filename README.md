@@ -32,11 +32,9 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
   ```
 
 ## Robosuite rollouts and waypoint evaluation
-- `eval_robosuite.py` — runs OpenVLA inside Robosuite with on-the-fly waypoint
-  generation; can save videos.
-- `eval_waypoints.py` — **Main eval program**: runs a waypoint-conditioned policy in Robosuite and
-  records videos/results (expects `PickPlaceClutter` env).
-- `eval_waypoints_visualize.py` — variant that regenerates data with
+- `eval_waypoints_all_in_one.py` — **Main eval program**: runs a waypoint-conditioned policy in Robosuite and
+  records videos/results (expects `PickPlaceClutter` env). Only Agent 4 (finetuned VLA backbone). 
+- `eval_waypoints_.py` — variant that regenerates data with
   `generate_vla_dataset_visualize.py` and saves visual overlays.
 
 ## Deployment
