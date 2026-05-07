@@ -19,7 +19,7 @@ import os
 import json
 
 # Initialize the NEW SDK Client
-client = genai.Client(api_key="AIzaSyCWN2r4ajumw0vYbMvwbt_HhbVzFYPf0Qo")
+client = genai.Client(api_key="")
 
 
 # --- Import your new environment to register it ---
