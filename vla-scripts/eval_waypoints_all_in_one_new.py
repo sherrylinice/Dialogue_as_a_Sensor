@@ -216,19 +216,16 @@ def eval(cfg: EvalConfig) -> None:
 
         try:
             waypoint_1_action = requests.post(
-                #"https://unifiedvla498.ngrok.dev/act",
                 "http://0.0.0.0:8001/act",
                 json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "pregrasp"}
             ).json()
 
             waypoint_2_action = requests.post(
-                #"https://unifiedvla498.ngrok.dev/act",
                 "http://0.0.0.0:8001/act",
                 json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "grasp"}
             ).json()
 
             waypoint_3_action = requests.post(
-                #"https://unifiedvla498.ngrok.dev/act",
                 "http://0.0.0.0:8001/act",
                 json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "release"}
             ).json()
