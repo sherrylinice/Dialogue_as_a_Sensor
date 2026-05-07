@@ -238,7 +238,7 @@ class PickPlaceClutter(ManipulationEnv):
         camera_segmentations=None,  # {None, instance, class, element}
         renderer="mjviewer",
         renderer_config=None,
-        seed=34,
+        seed=42,
     ):
         # task settings
         self.single_object_mode = single_object_mode
