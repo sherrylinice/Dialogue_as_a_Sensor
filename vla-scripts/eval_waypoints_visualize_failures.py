@@ -169,7 +169,7 @@ def eval(cfg: EvalConfig) -> None:
     # ==========================================
     # 0. SET DETERMINISTIC SEEDS
     # ==========================================
-    seed = 34
+    seed = 42
     import random
     random.seed(seed)
     np.random.seed(seed)
@@ -325,38 +325,6 @@ def eval(cfg: EvalConfig) -> None:
             os.remove(fail_dir / "vis_episode_00000.png") # Delete GT plot, just need the comparison
         except FileNotFoundError:
             pass
-
-    # ==========================================
-    # --- PRINT FINAL AVERAGE SUCCESS RATE ---
-    # ==========================================
-
-#        if is_success:
-#            print(">>> Trajectory SUCCESSFUL <<<")
-#            total_successes += 1
-#            os.remove(video_path) # Delete successful videos to save space
-#        else:
-#            print(">>> Trajectory FAILED - Saving visualization logs <<<")
-#            
-#            # Save the visualization strictly for the failed run
-#            K = camera_utils.get_camera_intrinsic_matrix(task_generator.env.sim, "agentview", task_generator.cam_height, task_generator.cam_width)
-#            T_wc = camera_utils.get_camera_extrinsic_matrix(task_generator.env.sim, "agentview")
-#            
-#            # Save GT as trial 0, Predicted as trial 1 inside a specific fail folder
-#            trial_fail_dir = fail_dir / f"fail_data_{i}"
-#            trial_fail_dir.mkdir(parents=True, exist_ok=True)
-#            task_generator.output_dir = trial_fail_dir
-#            
-#            task_generator.save_sample(0, img, task_generator.obs["agentview_depth"], task_generator.instruction, waypoint_labels_gt, K, T_wc)
-#            task_generator.save_sample(1, img, task_generator.obs["agentview_depth"], task_generator.instruction, waypoint_labels_predicted, K, T_wc)
-#            
-#            visualize_dataset(trial_fail_dir, fail_dir, num_samples=2)
-#            
-#            # Rename the generated plot so it doesn't get overwritten
-#            try:
-#                os.rename(fail_dir / "vis_episode_00001.png", fail_dir / f"trial_{i}_prediction_plot.png")
-#                os.remove(fail_dir / "vis_episode_00000.png") # Delete GT plot, just need the comparison
-#            except FileNotFoundError:
-#                pass
 
     # ==========================================
     # --- PRINT FINAL AVERAGE SUCCESS RATE ---
