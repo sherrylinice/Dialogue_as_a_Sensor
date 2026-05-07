@@ -91,3 +91,6 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
 
 ## Demonstration Videos 
 - Both successful and failure cases: https://drive.google.com/file/d/18MKWH45qkr14sJ-XhLLj07awpgqP2Qcp/view?usp=sharing
+
+## Original Proposed Multi-agent System Implementation 
+- vla-scripts/dialogue-as-a-sensor
