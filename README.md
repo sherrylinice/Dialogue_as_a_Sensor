@@ -99,3 +99,6 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
 
 ## Model Checkpoint
 - https://storage.googleapis.com/cs498-env/openvla-7b%2Bcereal%2Bb20%2Blr-0.0005%2Blora-r32%2Bdropout-0.0%2Bgrasp%2B251213_1456.zip
+
+## Demonstration Videos 
+- Both successful and failure cases: https://drive.google.com/file/d/18MKWH45qkr14sJ-XhLLj07awpgqP2Qcp/view?usp=sharing
