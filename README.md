@@ -96,3 +96,6 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
   specific waypoints (0=pregrasp, 1=grasp, 2=release).
 - Robosuite assets live under `vla-scripts/robosuite/`; ensure `pick_place_clutter`
   is importable before running Robosuite-based scripts.
+
+## Model Checkpoint
+- https://storage.googleapis.com/cs498-env/openvla-7b%2Bcereal%2Bb20%2Blr-0.0005%2Blora-r32%2Bdropout-0.0%2Bgrasp%2B251213_1456.zip
