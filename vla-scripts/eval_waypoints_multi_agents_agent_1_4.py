@@ -235,19 +235,16 @@ def eval(cfg: EvalConfig) -> None:
         try:
             waypoint_1_action = requests.post(
                 "http://0.0.0.0:8000/act",
-                #"https://unifiedvla498.ngrok.dev/act",
                 json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "pregrasp"}
             ).json()
 
             waypoint_2_action = requests.post(
                 "http://0.0.0.0:8000/act",
-                #"https://unifiedvla498.ngrok.dev/act",
                 json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "grasp"}
             ).json()
 
             waypoint_3_action = requests.post(
                 "http://0.0.0.0:8000/act",
-                #"https://unifiedvla498.ngrok.dev/act",
                 json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "release"}
             ).json()
         except Exception as e:
@@ -370,45 +367,6 @@ def eval(cfg: EvalConfig) -> None:
                     print(f"⚠️ Failed to parse human input, resuming original trajectory. Error: {e}")
             else:
                 print("⏩ Bypassing correction. Executing original trajectory...")
-#
-#            if human_input.strip():
-#                try:
-#                    # Parse the nested dictionary
-#                    user_corrections = ast.literal_eval(human_input)
-#                    
-#                    # Map shortcuts to actual dictionary keys
-#                    wp_map = {"A1": "A1_pregrasp", "A2": "A2_grasp", "A3": "A3_release"}
-#                    
-#                    for wp_key, osc_delta in user_corrections.items():
-#                        actual_wp = wp_map.get(wp_key, wp_key)
-#                        
-#                        if actual_wp not in trajectory_goals_3d:
-#                            print(f"⚠️ Warning: Unknown waypoint '{wp_key}'. Skipping.")
-#                            continue
-#                            
-#                        # 1. Apply Translation Deltas (Meters)
-#                        delta_pos = np.array([osc_delta.get('dx', 0.0), osc_delta.get('dy', 0.0), osc_delta.get('dz', 0.0)])
-#                        trajectory_goals_3d[actual_wp][0] = (np.array(trajectory_goals_3d[actual_wp][0]) + delta_pos).tolist()
-#                        
-#                        # 2. Apply Rotation Deltas (Human inputs degrees, we convert to radians)
-#                        d_roll = np.radians(osc_delta.get('d_roll', 0.0))
-#                        d_pitch = np.radians(osc_delta.get('d_pitch', 0.0))
-#                        d_yaw = np.radians(osc_delta.get('d_yaw', 0.0))
-#                        delta_euler = np.array([d_roll, d_pitch, d_yaw])
-#                        
-#                        if np.any(delta_euler): # Only calculate if a rotation was requested
-#                            current_quat = trajectory_goals_3d[actual_wp][1]
-#                            # Convert current quaternion to euler, add delta, convert back to quaternion
-#                            current_euler = R.from_quat(current_quat).as_euler('xyz')
-#                            new_euler = current_euler + delta_euler
-#                            trajectory_goals_3d[actual_wp][1] = R.from_euler('xyz', new_euler).as_quat().tolist()
-#
-#                        print(f"✅ Corrections applied to {actual_wp}: Shifted pos by {delta_pos}m, rotated by {[osc_delta.get('d_roll', 0), osc_delta.get('d_pitch', 0), osc_delta.get('d_yaw', 0)]} degrees.")
-#                except Exception as e:
-#                    print(f"⚠️ Failed to parse human input, resuming original trajectory. Error: {e}")
-#            else:
-#                print("⏩ Bypassing correction. Executing original trajectory...")
-                
                 
 # ==========================================
         # 3. EXECUTE AND EVALUATE (Agent 4)
@@ -455,19 +413,6 @@ def eval(cfg: EvalConfig) -> None:
             print(f"\n❌ >>> TRIAL {i} RESULT: FAILED <<<")
             print(f"🎥 Debug Video saved to: {video_path}")
 
-#        # ==========================================
-#        # 3. EXECUTE AND EVALUATE (Agent 4)
-#        # ==========================================
-#        is_success = task_generator.execute_trajectory(trajectory_goals_3d)
-#
-#        # Clearer per-trial results
-#        if is_success:
-#            total_successes += 1
-#            print(f"\n✅ >>> TRIAL {i} RESULT: SUCCESS <<<")
-#        else:
-#            failed_trials.append(i)
-#            print(f"\n❌ >>> TRIAL {i} RESULT: FAILED <<<")
-
     # ==========================================
     # --- END OF RUN SUMMARY ---
     # ==========================================
@@ -491,172 +436,3 @@ def eval(cfg: EvalConfig) -> None:
 if __name__ == "__main__":
     eval()
     
-#    total_successes = 0
-#    for i in range(cfg.num_times):
-#        task_generator.instruction = task_generator.generate_instruction("cereal box", "target bin")
-#        print(f"\nEvaluating trial {i+1}/{cfg.num_times}")
-#        
-#        # save env to video env and eval model
-#        task_env = task_generator.env
-#        video_env = VideoEnv(task_env, task_env.reset(), cfg)
-#        
-#        # Grab the proper neutral pose BEFORE any movement
-#        neutral_pos = video_env.robot_pos.copy()
-#        neutral_quat = video_env.robot_quat.copy()
-#
-#        print(f"Instruction: {task_generator.instruction}")
-#
-#        img = video_env.obs["agentview_image"]
-#        img = cv2.flip(img, 0).astype(np.uint8)
-#        # save the image
-#        cv2.imwrite("eval_image_waypoint.png", img)
-#
-#        try:
-#            waypoint_1_action = requests.post(
-#                "https://unifiedvla498.ngrok.dev/act",
-#                json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "pregrasp"}
-#            ).json()
-#
-#            waypoint_2_action = requests.post(
-#                "https://unifiedvla498.ngrok.dev/act",
-#                json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "grasp"}
-#            ).json()
-#
-#            waypoint_3_action = requests.post(
-#                "https://unifiedvla498.ngrok.dev/act",
-#                json={"image": img.copy(), "instruction": task_generator.instruction, "predict_mode": "release"}
-#            ).json()
-#        except Exception as e:
-#            print(f"Network error communicating with server: {e}")
-#            continue
-#
-#        a1_pos = np.array(waypoint_1_action[:3], dtype=np.float64, copy=True)
-#        a2_pos = np.array(waypoint_2_action[:3], dtype=np.float64, copy=True)
-#        a3_pos = np.array(waypoint_3_action[:3], dtype=np.float64, copy=True)
-#
-#        # Convert predicted rotvec -> quaternion (robosuite expects quat for slerp)
-#        pregrasp_quat = R.from_euler('xyz', np.array(waypoint_1_action[3:6], dtype=np.float64, copy=True)).as_quat()
-#        grasp_quat = R.from_euler('xyz', np.array(waypoint_2_action[3:6], dtype=np.float64, copy=True)).as_quat()
-#        standard_place_quat = R.from_euler('xyz', np.array(waypoint_3_action[3:6], dtype=np.float64, copy=True)).as_quat()
-#
-#        trajectory_goals_3d = {
-#            "A1_pregrasp": (a1_pos.tolist(), pregrasp_quat.tolist()),
-#            "A2_grasp": (a2_pos.tolist(), grasp_quat.tolist()),
-#            "A3_release": (a3_pos.tolist(), standard_place_quat.tolist()),
-#        }
-#
-#        # ==========================================
-#        # MULTI-AGENT RECOVERY SYSTEM
-#        # ==========================================
-#        is_safe, trigger_reason = agent_1_state_monitor(a1_pos, a2_pos, pregrasp_quat, grasp_quat)
-#
-#        if not is_safe:
-#            print("\n" + "!"*50)
-#            print("🛑 AGENT 1 TRIGGER: SIMULATION PAUSED")
-#            print(f"Reason: {trigger_reason}")
-#            print("!"*50)
-#            
-#            # ==========================================
-#            # GENERATE LIVE VISUALIZATION FOR HUMAN
-#            # ==========================================
-#            print("📸 Generating live visualization for human review...")
-#            
-#            # 1. Get Camera Matrices from MuJoCo
-#            cam_name = "agentview"
-#            K = camera_utils.get_camera_intrinsic_matrix(task_generator.env.sim, cam_name, task_generator.cam_height, task_generator.cam_width)
-#            T_wc = camera_utils.get_camera_extrinsic_matrix(task_generator.env.sim, cam_name)
-#            
-#            # 2. Format the 7-DoF waypoints exactly how the visualizer expects them
-#            waypoint_labels_predicted = {
-#                "A1_pregrasp": task_generator._get_7dof_pose(a1_pos, pregrasp_quat, -1.0),
-#                "A2_grasp":    task_generator._get_7dof_pose(a2_pos, grasp_quat,  1.0),
-#                "A3_release":  task_generator._get_7dof_pose(a3_pos, standard_place_quat, -1.0),
-#                "A4_home":     task_generator._get_7dof_pose(neutral_pos, neutral_quat, -1.0)
-#            }
-#            
-#            # 3. Save to a temporary debug folder and run the visualizer
-#            debug_dir = Path("debug_intervention")
-#            debug_dir.mkdir(exist_ok=True)
-#            task_generator.output_dir = debug_dir
-#            
-##            task_generator.save_sample(0, img, task_generator.obs["agentview_depth"], task_generator.instruction, waypoint_labels_predicted, K, T_wc)
-#            task_generator.save_sample(
-#                trial_idx=0,
-#                rgb_img=img,
-#                depth_img=task_generator.obs["agentview_depth"],
-#                instruction=task_generator.instruction,
-#                waypoint_labels=waypoint_labels_predicted,
-#                K=K,
-#                T_wc=T_wc
-#            )
-#            
-#            visualize_dataset(debug_dir, debug_dir, num_samples=1)
-#            
-#            print("👉 Open 'debug_intervention/vis_episode_00000.png' in your IDE to see the predicted waypoints!")
-#            # ==========================================
-#
-#            # --- HUMAN API (Dialogue as a Sensor) ---
-#            print("\n👤 Human Intervention Required.")
-#            print("Look at the image. Format your correction as a JSON string (e.g., {'dx': 0.0, 'dy': -0.04, 'dz': 0.0, 'd_roll': 0.0, 'd_pitch': 0.0, 'd_yaw': 15.0})")
-#            print("Or press Enter to bypass and let the robot attempt the unsafe trajectory.")
-#            
-#            human_input = input("Correction: ")
-#            
-#            if human_input.strip():
-#                try:
-#                    # 1. Apply Translation Deltas (Meters)
-#                    osc_delta = ast.literal_eval(human_input)
-#                    delta_pos = np.array([osc_delta.get('dx', 0.0), osc_delta.get('dy', 0.0), osc_delta.get('dz', 0.0)])
-#                    
-#                    trajectory_goals_3d["A1_pregrasp"][0] = (np.array(trajectory_goals_3d["A1_pregrasp"][0]) + delta_pos).tolist()
-#                    trajectory_goals_3d["A2_grasp"][0] = (np.array(trajectory_goals_3d["A2_grasp"][0]) + delta_pos).tolist()
-#                    
-#                    # 2. Apply Rotation Deltas (Human inputs degrees, we convert to radians)
-#                    d_roll = np.radians(osc_delta.get('d_roll', 0.0))
-#                    d_pitch = np.radians(osc_delta.get('d_pitch', 0.0))
-#                    d_yaw = np.radians(osc_delta.get('d_yaw', 0.0))
-#                    delta_euler = np.array([d_roll, d_pitch, d_yaw])
-#                    
-#                    if np.any(delta_euler): # Only calculate if a rotation was requested
-#                        for wp in ["A1_pregrasp", "A2_grasp"]:
-#                            current_quat = trajectory_goals_3d[wp][1]
-#                            # Convert current quaternion to euler, add delta, convert back to quaternion
-#                            current_euler = R.from_quat(current_quat).as_euler('xyz')
-#                            new_euler = current_euler + delta_euler
-#                            trajectory_goals_3d[wp][1] = R.from_euler('xyz', new_euler).as_quat().tolist()
-#
-#                    print(f"✅ Corrections applied: Shifted pos by {delta_pos}m, rotated by {[osc_delta.get('d_roll', 0), osc_delta.get('d_pitch', 0), osc_delta.get('d_yaw', 0)]} degrees.")
-#                except Exception as e:
-#                    print(f"⚠️ Failed to parse human input, resuming original trajectory. Error: {e}")
-#
-##            if human_input.strip():
-##                try:
-##                    osc_delta = ast.literal_eval(human_input)
-##
-##                    # Apply the Cartesian deltas to the waypoints
-##                    delta_vec = np.array([osc_delta.get('dx', 0), osc_delta.get('dy', 0), osc_delta.get('dz', 0)])
-##
-##                    trajectory_goals_3d["A1_pregrasp"][0] = (np.array(trajectory_goals_3d["A1_pregrasp"][0]) + delta_vec).tolist()
-##                    trajectory_goals_3d["A2_grasp"][0] = (np.array(trajectory_goals_3d["A2_grasp"][0]) + delta_vec).tolist()
-##
-##                    print(f"✅ Corrections applied: Shifted trajectory by {delta_vec}")
-##                except Exception as e:
-##                    print(f"⚠️ Failed to parse human input, resuming original trajectory. Error: {e}")
-#            else:
-#                print("⏩ Bypassing correction. Executing original trajectory...")
-#                
-#        # ==========================================
-#        # 3. EXECUTE AND EVALUATE (Agent 4)
-#        # ==========================================
-#        is_success = task_generator.execute_trajectory(trajectory_goals_3d)
-#
-#        if is_success:
-#            total_successes += 1
-#            print("Trajectory successful")
-#        else:
-#            print("Trajectory failed")
-#
-#    print(f"\nAverage success rate: {total_successes / cfg.num_times:.2f}")
-#
-#if __name__ == "__main__":
-#    eval()
