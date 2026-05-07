@@ -19,7 +19,7 @@ import os
 import json
 
 # Initialize the NEW SDK Client
-client = genai.Client(api_key="AIzaSyCizM-_u3Xh7_aZhTqDI4x5K8nrldNVUKk")
+client = genai.Client(api_key="")
 
 
 # --- Import your new environment to register it ---
@@ -494,57 +494,6 @@ Because all three checks indicate a safe trajectory, I will do nothing and outpu
         # ==========================================
         # EXECUTE AND EVALUATE (Agent 4)
         # ==========================================
-        # ==========================================
-        # EXECUTE AND EVALUATE BOTH TRAJECTORIES
-        # ==========================================
-#        debug_video_dir = Path("debug_videos")
-#        debug_video_dir.mkdir(exist_ok=True)
-#        
-#        original_step = task_generator.env.step
-#        def recording_step(action):
-#            step_results = original_step(action)
-#            video_env.obs = step_results[0]
-#            video_env.video_frame()
-#            return step_results
-#        task_generator.env.step = recording_step
-#
-#        # --- 1. SAVE INITIAL MUJOCO STATE ---
-#        # This captures the exact physics state of the box, table, and robot
-#        initial_sim_state = task_generator.env.sim.get_state()
-#        initial_obs = deepcopy(task_generator.obs)
-#        
-#        # --- 2. EXECUTE BASELINE (FAILED) TRAJECTORY ---
-#        print("\n🎬 Executing BASELINE (Original) Trajectory...")
-#        video_path_baseline = str(debug_video_dir / f"trial_{i}_baseline.mp4")
-#        video_env.video_start(path=video_path_baseline)
-#        
-#        baseline_success = task_generator.execute_trajectory(baseline_trajectory)
-#        video_env.video_stop()
-#        
-#        # --- 3. RESTORE INITIAL STATE ---
-#        print("🔄 Restoring simulator state to pre-grasp...")
-#        task_generator.env.sim.set_state(initial_sim_state)
-#        task_generator.env.sim.forward() # Forces MuJoCo to update physics based on the new state
-#        task_generator.obs = initial_obs
-#        video_env.obs = initial_obs
-#        
-#        # --- 4. EXECUTE FINAL (CORRECTED) TRAJECTORY ---
-#        print("🎬 Executing FINAL (Corrected) Trajectory...")
-#        video_path_final = str(debug_video_dir / f"trial_{i}_final.mp4")
-#        video_env.video_start(path=video_path_final)
-#        
-#        is_success = task_generator.execute_trajectory(trajectory_goals_3d)
-#        video_env.video_stop()
-#        
-#        # Restore standard step function
-#        task_generator.env.step = original_step
-#
-#        if is_success:
-#            total_successes += 1
-#            print(f"\n✅ >>> TRIAL {i} RESULT: SUCCESS <<<")
-#        else:
-#            failed_trials.append(i)
-#            print(f"\n❌ >>> TRIAL {i} RESULT: FAILED <<<")
         debug_video_dir = Path("debug_videos")
         debug_video_dir.mkdir(exist_ok=True)
         video_path = str(debug_video_dir / f"trial_{i}_intervention.mp4")
