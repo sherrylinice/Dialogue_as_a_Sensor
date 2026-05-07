@@ -3,7 +3,7 @@
 Short pointers for the scripts under `vla-scripts/`, what they do, and the
 minimum CLI you need to run them. All commands assume you are in the repo root.
 
-## Core training and evaluation
+## Core training 
 - `finetune.py` — LoRA fine-tuning of an OpenVLA model on an RLDS-style dataset.
   Typical multi-GPU run:
   ```
@@ -17,15 +17,6 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
   ```
   You can point `--vla_path` at an existing LoRA run to continue training or to
   fine-tune a merged checkpoint.
-
-- `eval.py` — offline evaluation on a dataset; mirrors the finetune config but
-  does not update weights. Example:
-  ```
-  torchrun --standalone --nnodes 1 --nproc-per-node 1 vla-scripts/eval.py \
-    --vla_path checkpoints/<run_dir> \
-    --data_root_dir /media/data \
-    --dataset_name my_cereal_task_trajectories
-  ```
 
 ## Dataset generation and visualization (Robosuite)
 - `generate_vla_dataset_trajectories.py` — headless Robosuite rollouts that
@@ -51,7 +42,7 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
 ## Deployment
 - `deploy.py` — REST API server for inference. Start on GPU host:
   ```
-  python vla-scripts/deploy.py --openvla_path checkpoints/<merged_or_base> \
+  python vla-scripts/deploy_all_in_one.py --openvla_path checkpoints/<merged_or_base> \
     --stats_path checkpoints/<merged_or_base>/dataset_statistics.json \
     --predict_waypoint -1
   ```
