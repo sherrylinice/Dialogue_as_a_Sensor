@@ -35,7 +35,7 @@ minimum CLI you need to run them. All commands assume you are in the repo root.
 - `eval_waypoints_all_in_one_new.py` — **Main eval program**: runs a waypoint-conditioned policy in Robosuite and
   records videos/results (expects `PickPlaceClutter` env). Only Agent 4 (finetuned VLA backbone). 
 - `eval_waypoints_multi_agents_agent_1_23_4_new.py` — **Main eval program**:run the revised multi-agent multi-turn conversation evaluation
-- 
+- `eval_waypoints_all_in_one_diaglogue.py` — run the original proposed multi-agent system
 
 ## Deployment
 - `deploy.py` — REST API server for inference. Start on GPU host:
