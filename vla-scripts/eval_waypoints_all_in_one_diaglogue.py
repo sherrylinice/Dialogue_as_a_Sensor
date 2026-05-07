@@ -347,31 +347,6 @@ def eval(cfg: EvalConfig) -> None:
                         trajectory_goals_3d["A1_pregrasp"] = (new_a1_pos, new_a1_quat)
                         print(f"🔧 Applied Agent 3 Nudges successfully.")
 
-                # (Make sure to DELETE your old "ALWAYS ENFORCE ALIGNMENT" block below this!)
-#                    if a1_delta or a2_delta:
-#                        orig_a2_pos = np.array(trajectory_goals_3d["A2_grasp"][0])
-#                        orig_a2_quat = trajectory_goals_3d["A2_grasp"][1]
-#                        
-#                        dx = a1_delta.get('dx', 0.0) + a2_delta.get('dx', 0.0)
-#                        dy = a1_delta.get('dy', 0.0) + a2_delta.get('dy', 0.0)
-#                        dz = a1_delta.get('dz', 0.0) + a2_delta.get('dz', 0.0)
-#                        delta_pos = np.array([dx, dy, dz])
-#                        new_a2_pos = (orig_a2_pos + delta_pos).tolist()
-#                        
-#                        # 🚨 NOTE: Agent 3 outputs RADIANS natively, no np.radians() needed here
-#                        d_roll = a1_delta.get('d_roll', 0.0) + a2_delta.get('d_roll', 0.0)
-#                        d_pitch = a1_delta.get('d_pitch', 0.0) + a2_delta.get('d_pitch', 0.0)
-#                        d_yaw = a1_delta.get('d_yaw', 0.0) + a2_delta.get('d_yaw', 0.0)
-#                        
-#                        if np.any([d_roll, d_pitch, d_yaw]):
-#                            current_euler = R.from_quat(orig_a2_quat).as_euler('xyz')
-#                            new_quat = R.from_euler('xyz', current_euler + [d_roll, d_pitch, d_yaw]).as_quat().tolist()
-#                        else:
-#                            new_quat = orig_a2_quat
-#                            
-#                        trajectory_goals_3d["A2_grasp"] = (new_a2_pos, new_quat)
-#                        print(f"🔧 Applied Agent 3 Nudges to A2.")
-
                 # ALWAYS ENFORCE ALIGNMENT
                 final_a2_pos = np.array(trajectory_goals_3d["A2_grasp"][0])
                 final_a2_quat = trajectory_goals_3d["A2_grasp"][1]
@@ -397,11 +372,6 @@ def eval(cfg: EvalConfig) -> None:
             return step_results
             
         task_generator.env.step = recording_step
-
-        # Execute
-        #is_success = task_generator.execute_trajectory(trajectory_goals_3d)
-        # Execute
-        is_success, _ = task_generator.execute_trajectory(trajectory_goals_3d)
 
         # 3. UNPATCH AND STOP VIDEO
         task_generator.env.step = original_step
