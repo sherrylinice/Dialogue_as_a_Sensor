@@ -130,7 +130,7 @@ class EvalConfig:
 
 @draccus.wrap()
 def eval(cfg: EvalConfig) -> None:
-    seed = 34
+    seed = 42
     import random
     random.seed(seed)
     np.random.seed(seed)
