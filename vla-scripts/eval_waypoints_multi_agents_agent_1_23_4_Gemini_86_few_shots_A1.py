@@ -19,7 +19,7 @@ import os
 import json
 
 # Initialize the NEW SDK Client
-client = genai.Client(api_key="AIzaSyCocOGWQBhGTRPQ-kr8wFals-kVHl1vV7Y")
+client = genai.Client(api_key="")
 
 
 # --- Import your new environment to register it ---
@@ -460,53 +460,6 @@ Because all three checks indicate a safe trajectory, I will do nothing and outpu
                 a2_pos = np.array(trajectory_goals_3d["A2_grasp"][0])
                 grasp_quat = np.array(trajectory_goals_3d["A2_grasp"][1])
                 
-#                corrections = json.loads(vlm_raw_output)
-#                if isinstance(corrections, list):
-#                    corrections = corrections[0] if len(corrections) > 0 else {}
-#                
-#                if not corrections:
-#                    print("✅ Gemini determined trajectory is actually safe (False Positive Override).")
-#                    vlm_intervened = "False Positive Override"
-#                    break # Exit reflection loop if VLM insists it's safe
-#                else:
-#                    vlm_intervened = True
-#                    
-#                    # Look for A2
-#                    osc_delta = corrections.get("A2", corrections.get("A2_grasp", {}))
-#
-#                    if osc_delta:
-#                        # --- 1. UPDATE A2 (GRASP) ---
-#                        orig_a2_pos = np.array(trajectory_goals_3d["A2_grasp"][0])
-#                        orig_a2_quat = trajectory_goals_3d["A2_grasp"][1]
-#
-#                        delta_pos = np.array([osc_delta.get('dx', 0.0), osc_delta.get('dy', 0.0), osc_delta.get('dz', 0.0)])
-#
-#                        new_a2_pos = (orig_a2_pos + delta_pos).tolist()
-#
-#                        d_roll = np.radians(osc_delta.get('d_roll', 0.0))
-#                        d_pitch = np.radians(osc_delta.get('d_pitch', 0.0))
-#                        d_yaw = np.radians(osc_delta.get('d_yaw', 0.0))
-#
-#                        if np.any([d_roll, d_pitch, d_yaw]):
-#                            current_euler = R.from_quat(orig_a2_quat).as_euler('xyz')
-#                            new_a2_quat = R.from_euler('xyz', current_euler + [d_roll, d_pitch, d_yaw]).as_quat().tolist()
-#                        else:
-#                            new_a2_quat = orig_a2_quat
-#
-#                        trajectory_goals_3d["A2_grasp"] = (new_a2_pos, new_a2_quat)
-#
-#                        # --- 2. UPDATE A1 (PRE-GRASP) TO MATCH A2's X/Y ---
-#                        orig_a1_pos = np.array(trajectory_goals_3d["A1_pregrasp"][0])
-#                        new_a1_pos = [new_a2_pos[0], new_a2_pos[1], orig_a1_pos[2]]
-#                        trajectory_goals_3d["A1_pregrasp"] = (new_a1_pos, new_a2_quat)
-#
-#                # --- 3. CRITICAL FIX: UPDATE VARIABLES FOR THE NEXT SAFETY CHECK LOOP ---
-#                # This pulls the updated math out of the dictionary so the next attempt evaluates the new positions
-#                a1_pos = np.array(trajectory_goals_3d["A1_pregrasp"][0])
-#                pregrasp_quat = np.array(trajectory_goals_3d["A1_pregrasp"][1])
-#                a2_pos = np.array(trajectory_goals_3d["A2_grasp"][0])
-#                grasp_quat = np.array(trajectory_goals_3d["A2_grasp"][1])
-#
             except Exception as e:
                 print(f"⚠️ Gemini API Error: {e}")
                 break # Exit loop on API error to prevent infinite crashing
