@@ -106,37 +106,6 @@ class VideoEnv():
         # We also removed the sim.render() warmup here! Just write the first observation.
         for _ in range(3): self.video_frame("start")
 
-#    def video_frame(self, text=None):
-#        if not getattr(self, "_rec", None) or not self._rec["on"]: return
-#        H, W = self._rec["H"], self._rec["W"]
-#        cam = self._rec["camera"]
-#        rgb = self.env.sim.render(camera_name=cam, height=H, width=W, depth=False)
-#        frame = cv2.flip(rgb, 0)
-#        if frame.dtype != np.uint8: frame = np.clip(frame, 0, 255).astype(np.uint8)
-#        frame = np.ascontiguousarray(frame)
-#        if text:
-#            cv2.putText(frame, text, (12, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 3, cv2.LINE_AA)
-#            cv2.putText(frame, text, (12, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 1, cv2.LINE_AA)
-#        bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-#        bgr = np.ascontiguousarray(bgr)
-#        self._rec["frames"] += 1
-#        self._rec["writer"].write(bgr)
-#        
-#    def video_start(self, path="eval.mp4", fps=30, H=256, W=256, camera_name="agentview"):
-#        self._rec = {"on": False, "path": path, "fps": fps, "H": H, "W": W, "camera": camera_name, "frames": 0}
-#        for fourcc_str in ("avc1", "mp4v", "XVID", "MJPG"):
-#            fourcc = cv2.VideoWriter_fourcc(*fourcc_str)
-#            writer = cv2.VideoWriter(path, fourcc, fps, (W, H), True)
-#            if writer.isOpened():
-#                self._rec.update({"writer": writer, "fourcc": fourcc_str, "on": True})
-#                break
-#        if not self._rec.get("on", False):
-#            print(f"⚠️ WARNING: OpenCV failed to open VideoWriter for {path}. Skipping video recording for this trial.")
-#            return
-#            
-#        _ = self.env.sim.render(camera_name=camera_name, height=H, width=W, depth=False)
-#        for _ in range(3): self.video_frame("start")
-
     def video_stop(self):
         if getattr(self, "_rec", None) and self._rec.get("on", False):
             self._rec["writer"].release()
@@ -292,8 +261,6 @@ Because all three checks indicate a safe trajectory, I will do nothing and outpu
         # ==========================================
         # INITIALIZE VIDEO IMMEDIATELY AFTER RESET
         # ==========================================
-#        video_path = str(video_dir / f"trial_{i}_video.mp4")
-#        video_env.video_start(path=video_path)
 
         print(f"Instruction: {task_generator.instruction}")
         img = video_env.obs["agentview_image"]
@@ -421,59 +388,6 @@ Because all three checks indicate a safe trajectory, I will do nothing and outpu
                 
                 print("⏳ Pacing API to avoid RPM limits...")
                 time.sleep(15) # Keep your sleep timer!
-            
-#            try:
-#                live_img = Image.open("debug_intervention/vis_episode_00000.png")
-##                ex1_img = Image.open("eval_failed_cases/trial_33_FAILED_prediction_plot.png")
-##                ex2_img = Image.open("eval_failed_cases/trial_23_FAILED_prediction_plot.png")
-##                ex3_img = Image.open("eval_failed_cases/trial_19_FAILED_prediction_plot.png")
-##                ex4_img = Image.open("eval_failed_cases/trial_4_SUCCESS_prediction_plot.png")
-##                ex5_img = Image.open("eval_failed_cases/trial_35_SUCCESS_prediction_plot.png")
-#
-#                prompt_contents = [
-#                    SYSTEM_RULES,
-#                    "\n--- EXAMPLE 1 ---",
-#                    f"Trigger: {EXAMPLE_1_TRIGGER}\nDiagnose the image and provide the JSON correction.",
-#                    ex1_img,
-#                    f"Assistant Response:\n{EXAMPLE_1_RESPONSE}",
-#                    
-#                    "\n--- EXAMPLE 2 ---",
-#                    f"Trigger: {EXAMPLE_2_TRIGGER}\nDiagnose the image and provide the JSON correction.",
-#                    ex2_img,
-#                    f"Assistant Response:\n{EXAMPLE_2_RESPONSE}",
-#                    
-#                    "\n--- EXAMPLE 3 ---",
-#                    f"Trigger: {EXAMPLE_3_TRIGGER}\nDiagnose the image and provide the JSON correction.",
-#                    ex3_img,
-#                    f"Assistant Response:\n{EXAMPLE_3_RESPONSE}",
-#                    
-#                    "\n--- EXAMPLE 4 ---",
-#                    f"Trigger: {EXAMPLE_4_TRIGGER}\nDiagnose the image and provide the JSON correction.",
-#                    ex4_img,
-#                    f"Assistant Response:\n{EXAMPLE_4_RESPONSE}",
-#                    
-#                    "\n--- EXAMPLE 5 ---",
-#                    f"Trigger: {EXAMPLE_5_TRIGGER}\nDiagnose the image and provide the JSON correction.",
-#                    ex5_img,
-#                    f"Assistant Response:\n{EXAMPLE_5_RESPONSE}",
-#                    
-#                    "\n--- REAL SCENARIO ---",
-#                    "Based on the rules and examples above, analyze this final image and provide ONLY the JSON response.",
-#                    f"Trigger: {trigger_reason}",
-#                    live_img
-#                ]
-#
-#                response = client.models.generate_content(
-#                    model='gemini-3.1-pro-preview',
-#                    contents=prompt_contents,
-#                    config=types.GenerateContentConfig(
-#                        temperature=0.0,
-#                        response_mime_type="application/json",
-#                    )
-#                )
-#                
-#                print("⏳ Pacing API to avoid RPM limits...")
-#                time.sleep(15)
                 
                 vlm_raw_output = response.text
                 print(f"\n[Gemini Reasoning]:\n{vlm_raw_output}\n")
@@ -520,36 +434,6 @@ Because all three checks indicate a safe trajectory, I will do nothing and outpu
                 new_a1_pos = [final_a2_pos[0], final_a2_pos[1], orig_a1_pos[2]]
                 trajectory_goals_3d["A1_pregrasp"] = (new_a1_pos, final_a2_quat)
                 print("📏 Enforced Kinematic Alignment: A1 XY and Yaw synced to A2.")
-                
-#                if not corrections:
-#                    print("✅ Gemini determined trajectory is actually safe (False Positive Override).")
-#                    vlm_intervened = "False Positive Override"
-#                else:
-#                    vlm_intervened = True
-#                    osc_delta = corrections.get("A2", corrections.get("A2_grasp", {}))
-#                    
-#                    if osc_delta:
-#                        orig_a2_pos = np.array(trajectory_goals_3d["A2_grasp"][0])
-#                        orig_a2_quat = trajectory_goals_3d["A2_grasp"][1]
-#                        
-#                        delta_pos = np.array([osc_delta.get('dx', 0.0), osc_delta.get('dy', 0.0), osc_delta.get('dz', 0.0)])
-#                        new_a2_pos = (orig_a2_pos + delta_pos).tolist()
-#                        
-#                        d_roll = np.radians(osc_delta.get('d_roll', 0.0))
-#                        d_pitch = np.radians(osc_delta.get('d_pitch', 0.0))
-#                        d_yaw = np.radians(osc_delta.get('d_yaw', 0.0))
-#                        
-#                        if np.any([d_roll, d_pitch, d_yaw]):
-#                            current_euler = R.from_quat(orig_a2_quat).as_euler('xyz')
-#                            new_a2_quat = R.from_euler('xyz', current_euler + [d_roll, d_pitch, d_yaw]).as_quat().tolist()
-#                        else:
-#                            new_a2_quat = orig_a2_quat
-#                            
-#                        trajectory_goals_3d["A2_grasp"] = (new_a2_pos, new_a2_quat)
-#                        
-#                        orig_a1_pos = np.array(trajectory_goals_3d["A1_pregrasp"][0])
-#                        new_a1_pos = [new_a2_pos[0], new_a2_pos[1], orig_a1_pos[2]]
-#                        trajectory_goals_3d["A1_pregrasp"] = (new_a1_pos, new_a2_quat)
 
             except Exception as e:
                 print(f"⚠️ Gemini API Error: {e}")
